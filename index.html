@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Online status</title>
+  <script src="./js/ping.js"></script>
+  <!-- 本地网络设备信息 -->
+  <script>
+    window.addEventListener('load', () => {
+      // 页面加载后，设置正确网络状态
+      showStatus();
+      showPingData();
+
+      // 开始监听网络变化
+      window.addEventListener('online', () => {
+        showStatus();
+        showPingData();
+      });
+
+      window.addEventListener('offline', () => {
+        showStatus();
+        showPingData();
+      });
+    });
+
+    function showStatus() {
+      document.getElementById('indicator').textContent = navigator.onLine ? 'online' : 'offline';
+      document.getElementById('ua').textContent = navigator.userAgent;
+      document.getElementById('type').textContent = navigator.connection.effectiveType;
+      document.getElementById('downlink').textContent = navigator.connection.downlink;
+      document.getElementById('rtt').textContent = navigator.connection.rtt;
+      document.getElementById('language').textContent = navigator.language;
+      document.getElementById('platform').textContent = navigator.platform;
+    }
+  </script>
+
+  <!-- Ping检测 -->
+  <style>
+    .ping-list ul span {
+      color: green;
+    }
+  </style>
+  <script>
+    function showPingData() {
+      let settings = {
+        timeout: 2000,
+        logError: true,
+      };
+      let p = new Ping(settings);
+
+      p.ping("https://baidu.com", function (err, data) {
+        if (err) {
+          console.log('error loading resource');
+          data = data + " " + err;
+        }
+        document.getElementById('ping-baidu').textContent = data;
+      });
+      p.ping("https://qq.com", function (err, data) {
+        if (err) {
+          console.log('error loading resource');
+          data = data + " " + err;
+        }
+        document.getElementById('ping-qq').textContent = data;
+      });
+      p.ping("https://taobao.com", function (err, data) {
+        if (err) {
+          console.log('error loading resource');
+          data = data + " " + err;
+        }
+        document.getElementById('ping-taobao').textContent = data;
+      });
+      p.ping("https://bilibili.com", function (err, data) {
+        if (err) {
+          console.log('error loading resource');
+          data = data + " " + err;
+        }
+        document.getElementById('ping-bilibili').textContent = data;
+      });
+      p.ping("https://weibo.com", function (err, data) {
+        if (err) {
+          console.log('error loading resource');
+          data = data + " " + err;
+        }
+        document.getElementById('ping-weibo').textContent = data;
+      });
+      p.ping("https://xsl.cokutau.com", function (err, data) {
+        if (err) {
+          console.log('error loading resource');
+          data = data + " " + err;
+        }
+        document.getElementById('ping-local').textContent = data;
+      });
+    }
+  </script>
+
+  <script>
+    function get(url, cb) {
+      var httpRequest = new XMLHttpRequest();
+      httpRequest.open('GET', url, true);
+      httpRequest.send();
+      httpRequest.onreadystatechange = function () {
+        if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+          var json = httpRequest.responseText;
+          cb(json);
+        }
+      };
+    }
+    get("https://api.ipify.org/?format=json", function (data) {
+      data = JSON.parse(data);
+      document.getElementById('ip').textContent = data.ip;
+    });
+  </script>
+</head>
+
+<body>
+  <div>
+    <h1>本地网络设备信息</h1>
+    <p>The network is: <span id="indicator">(state unknown)</span></p>
+    <p>The browser UA is: <span id="ua">(state unknown)</span></p>
+    <p>The network type is: <span id="type">(state unknown)</span></p>
+    <p>The network downlink is: <span id="downlink">(state unknown)</span></p>
+    <p>The network rtt is: <span id="rtt">(state unknown)</span></p>
+    <p>The language is: <span id="language">(state unknown)</span></p>
+    <p>The platform is: <span id="platform">(state unknown)</span></p>
+  </div>
+
+  <div>
+    <h1>IP</h1>
+    <p>IP is: <span id="ip">(state unknown)</span></p>
+  </div>
+
+  <div>
+    <h1>Ping 检测</h1>
+    <div class="ping-list">
+      <ul>
+        <li>baidu.com <span id="ping-baidu"></span></li>
+        <li>qq.com <span id="ping-qq"></span></li>
+        <li>taobao.com <span id="ping-taobao"></span></li>
+        <li>bilibili.com <span id="ping-bilibili"></span></li>
+        <li>weibo.com <span id="ping-weibo"></span></li>
+        <li>local <span id="ping-local"></span></li>
+      </ul>
+    </div>
+  </div>
+</body>
+
+</html>
